@@ -350,27 +350,28 @@ const CompanionServerAPIv1: FastifyPluginCallback<CompanionServerAPIv1Options> =
         };
 
         const startTime = Date.now();
-        const authorized = await new Promise<boolean>(resolve => {
-          promiseResolve = resolve;
-          promiseInterval = setInterval(() => {
-            if (request.socket.destroyed) {
-              clearInterval(promiseInterval);
-              resolve(false);
-            }
+        const authorized = true;
+        // const authorized = await new Promise<boolean>(resolve => {
+        //   promiseResolve = resolve;
+        //   promiseInterval = setInterval(() => {
+        //     if (request.socket.destroyed) {
+        //       clearInterval(promiseInterval);
+        //       resolve(false);
+        //     }
 
-            if (Date.now() - startTime > 30 * 1000) {
-              clearInterval(promiseInterval);
-              resolve(false);
-            }
-          }, 250);
+        //     if (Date.now() - startTime > 30 * 1000) {
+        //       clearInterval(promiseInterval);
+        //       resolve(false);
+        //     }
+        //   }, 250);
 
-          ipcMain.once(`companionAuthorization:result:${requestId}`, resultListener);
-          ipcMain.once(`companionWindow:close:${requestId}`, closeListener);
-          authorizationWindow.once("closed", () => {
-            authorizationWindowClosed = true;
-            closeListener(null);
-          });
-        });
+        //   ipcMain.once(`companionAuthorization:result:${requestId}`, resultListener);
+        //   ipcMain.once(`companionWindow:close:${requestId}`, closeListener);
+        //   authorizationWindow.once("closed", () => {
+        //     authorizationWindowClosed = true;
+        //     closeListener(null);
+        //   });
+        // });
 
         if (!authorizationWindowClosed) {
           authorizationWindow.removeListener("closed", closeListener);
@@ -449,7 +450,7 @@ const CompanionServerAPIv1: FastifyPluginCallback<CompanionServerAPIv1Options> =
         // API users: Please utilize the realtime websocket to get the state. Request this endpoint as necessary, such as initial state fetching.
         rateLimit: {
           hook: "preHandler",
-          max: 1,
+          max: 100000000,
           timeWindow: 1000 * 5,
           keyGenerator: request => {
             return request.authId || request.ip;

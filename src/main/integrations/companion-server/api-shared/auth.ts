@@ -117,24 +117,25 @@ export function isAuthValid(store: Conf<StoreSchema>, authToken: string): [boole
 }
 
 export function isAuthValidMiddleware(store: Conf<StoreSchema>, request: FastifyRequest, response: FastifyReply, next: HookHandlerDoneFunction) {
-  const authToken = request.headers.authorization;
-  if (!authToken) {
-    response.code(401);
-    response.send({
-      error: "UNAUTHORIZED"
-    });
-    return;
-  }
+  // const authToken = request.headers.authorization;
+  //   if (!authToken) {
+  //     response.code(401);
+  //     response.send({
+  //       error: "UNAUTHORIZED"
+  //     });
+  //     return;
+  //   }
 
-  const [validSession, tokenId] = isAuthValid(store, authToken);
+  //   const [validSession, tokenId] = isAuthValid(store, authToken);
 
-  if (validSession) {
-    request.authId = tokenId;
-    next();
-  } else {
-    response.code(401);
-    response.send({
-      error: "UNAUTHORIZED"
-    });
-  }
+  //   if (validSession) {
+  //     request.authId = tokenId;
+
+  //   } else {
+  //     response.code(401);
+  //     response.send({
+  //       error: "UNAUTHORIZED"
+  //     });
+  //   }
+  next();
 }
